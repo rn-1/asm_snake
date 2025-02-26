@@ -7,6 +7,6 @@ snake: main.o read.o
 	ld -o snake main.o read.o random.o ${LDFLAGS} -arch arm64
 
 clean:
-	rm -f snake main.o read.o
+	rm -f snake main.o read.o random.o
 
 
