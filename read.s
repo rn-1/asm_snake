@@ -53,6 +53,7 @@ forloop:
     // else, print and continue the scan. We also need to reset the pointer
 
     MOV	X0, #1		// 1 = StdOut file descriptor
+    MOV X1, #0 //clear x1 just in case
     ADRP X7, display_string@PAGE // reset the pointer to the start of the display string
     ADD X7, X7, display_string@PAGEOFF // i love darwin
     mov X1, X7 // since we already have the address might as well just use mov
@@ -99,6 +100,7 @@ endforloop:
 
     // one final print to finish up.
     MOV	X0, #1		// 1 = StdOut file descriptor
+    MOV X1, #0 //clear x1 just in case
     ADRP X7, display_string@PAGE // reset the pointer to the start of the display string
     ADD X7, X7, display_string@PAGEOFF // i love darwin
     mov X1, X7 // since we already have the address might as well just use mov

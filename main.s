@@ -11,6 +11,7 @@
 // REGISTERS USED:
 // -- X0-X2 - parameters to Unix system calls
 // -- X10: stores the runflag to tell us whether or not we are still playing
+//      you can overwrite this register to stop the game.
 // -- X11: value of cell to be stored
 // -- X13: divclk, use bit 50, see if that works.
 // -- X14: big value to compare to X13

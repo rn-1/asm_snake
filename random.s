@@ -3,6 +3,7 @@
 
 .align 4
 .global gen_random
+.global timeval
 
 // REGISTERS USED:
 // -- X20: stores the final random output
@@ -13,23 +14,23 @@ gen_random:
     MOV X22, #2113 // a random prime by which to multiply
     MOV X21, #3
 
-    // syscall for mach_absolute_time()
-    MOV X0, #0
-    LDR X1, TIME_OUTPUT@PAGE
-    ADD X1, X1, TIME_OUTPUT@PAGEOFF
-    mov x2, #0
-    mov x3, #0
-    mov X16, #116
+    // syscall for unix epoch time
+    ADRP X0, timeval@PAGE         // Load page address of timeval
+    ADD X0, X0, timeval@PAGEOFF   // Add page offset
+    MOV X1, #0                    // NULL for timezone
+    mov X16, #116 // syscall number for gettimeofday
     svc #0x80
 
     // we now have it and we will get our result
-    MOV X20, X3 // store the lower bits as our base values
+    ADRP X1, timeval@PAGE // reset bc idk
+    ADD X1, X1, timeval@PAGEOFF
+    LDR X20, [X1], #8 // store the seconds as our base values
 
-    // TODO it should not be making fruits every tick, perhaps every 8?
-    // We will need to make a divclk 😭
-
+    LDR X2, [X1]
 mult:
-    ADD X20, X20, X2 // add the upper bits as salt
+    
+    ADD X20, X20, X2 // use the nanoseconds as salt
+
     MUL X20, X20, X22 // this fits in a 64 bit register
     // overflow schmoverflow
     AND X20, X20, #0xFF // mod 256 again
@@ -40,7 +41,6 @@ mult:
 end:
     RET
 
-
-
-.data:
-    TIME_OUTPUT: .zero 16 // reserve some bytes for the epoch time stamp.
+.data
+    timeval: 
+        .space 16
