@@ -19,6 +19,8 @@
 _start:
     // main body of the program
     MOV X10, #1 // 1 means we are playing. This is much simpler thankfully, but now we cannot use X10 :( too bad!
+
+    BL set // set the snake position to start.
     
     MOV X13, #0
     MOVK X13, #1, LSL #32 // reset the divclk to a value such that the first cycle always plays.
@@ -39,10 +41,11 @@ game:
     B.NE game
 
     MOV X13, #0 // reset divclk
-    
+
+    BL update
+
     BL gen_random // generates a random number, stored in X20, only do this when the divclk reaches the appropriate value 
    
-
     BL read // call the read function and print out our funny little guy
     
     // generate a random food

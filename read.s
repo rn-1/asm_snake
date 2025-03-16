@@ -68,7 +68,8 @@ scan:
     // Cells are arranged in an 8x8 grid. Therefore, we scan row by row as we update.
     MOV X5, #0
     LDR X5, [X4], #1 // X5 now contains the value of the cell.
-    AND X5, X5, #0xFF // isolate the last byte of the read. if cells is less than 32 bytes, it is bad if we don't.
+    AND X5, X5, #0x0F // isolate the last byte of the read. if cells is less than 32 bytes, it is bad if we don't.
+    // also use lower bits since that holds type
     CMP X5, #1 // compare to value 1.
     B.EQ food // idk maybe we need this who knows.
     B.LT empty // value must be 0, so it must be empty.
